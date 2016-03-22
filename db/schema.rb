@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160322054218) do
+ActiveRecord::Schema.define(version: 20160322125459) do
 
   create_table "booklists", force: :cascade do |t|
     t.string   "title"
@@ -25,8 +25,12 @@ ActiveRecord::Schema.define(version: 20160322054218) do
     t.string   "title"
     t.string   "sitename"
     t.string   "spoturl"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.datetime "last_click"
+    t.datetime "last_update"
+    t.datetime "last_scan"
+    t.string   "scan_tag"
   end
 
 end

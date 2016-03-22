@@ -6,6 +6,9 @@
     <div class="col-md-6 col-md-offset-3">
         <%= link_to '新增小說', {:controller => 'books', :action => 'new'}, 
             class: "btn btn-primary" %>
+
+        <%= link_to '掃描更新', {:controller => 'books', :action => 'scan_all'}, 
+            class: "btn btn-default" %>
         <table class="table">
             <thead>
                 <tr> 
@@ -15,7 +18,15 @@
             <tbody>
             <% @books.each do |book|  %>
             <tr>
-                <td><a href="<%=book.spoturl%>"><%= book.title %></td></a>
+                <td>
+                    <%= link_to book.title, {:controller => 'books', :action => 'click', :id => book},
+                        class: "btn btn-link" %>
+                    <% if book.last_update != nil and (
+                            book.last_click == nil or 
+                            book.last_click <= book.last_update) %>
+                        <span class="label label-success">New!</span>
+                    <% end %>
+                </td>
                 <td><%= book.sitename %></td>
                 <td>
                     <%= link_to '編輯', {:controller => 'books', :action => 'edit', :id => book}, 
