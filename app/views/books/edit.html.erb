@@ -1,0 +1,27 @@
+<body>
+
+<%= render "common/navbar" %>
+
+
+
+<div class="row">
+    <div class="col-md-6 col-md-offset-3">
+
+<%= form_for @book, :url => { :controller => 'books', :action => 'update', :id => @book } do |f| %>
+    <%= f.label :title, "書名" %> 
+        <%= f.text_field :title %>
+
+    <%= f.label :spoturl, "監測網址" %>
+        <%= f.text_field :spoturl %>
+
+    <%= f.label :sitename, "網站" %>
+        <%= f.text_field :sitename %>
+
+    <%= f.submit "更新資料" %>
+<% end %>
+
+</div>
+
+<%= render "common/footer" %>
+
+</body>

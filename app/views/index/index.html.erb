@@ -1,0 +1,35 @@
+<body >
+
+<%= render "common/navbar" %>
+
+<div class="row">
+    <div class="col-md-6 col-md-offset-3">
+        <%= link_to '新增小說', {:controller => 'books', :action => 'new'}, 
+            class: "btn btn-primary" %>
+        <table class="table">
+            <thead>
+                <tr> 
+                    <td>書名/連結</td> <td>網站名稱</td> <td> 操作 </td> 
+                </tr>
+            </thead>
+            <tbody>
+            <% @books.each do |book|  %>
+            <tr>
+                <td><a href="<%=book.spoturl%>"><%= book.title %></td></a>
+                <td><%= book.sitename %></td>
+                <td>
+                    <%= link_to '編輯', {:controller => 'books', :action => 'edit', :id => book}, 
+                        class: "btn btn-info" %>
+                    <%= link_to '刪除', {:controller => 'books', :action => 'destroy', :id => book},
+                        class: "btn btn-warning" %>
+                </td>
+            </tr>
+            <% end %>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<%= render "common/footer" %>
+
+</body>
