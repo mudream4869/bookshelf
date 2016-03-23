@@ -12,7 +12,7 @@
         <table class="table">
             <thead>
                 <tr> 
-                    <td>書名/連結</td> <td>網站名稱</td> <td> 操作 </td> 
+                    <td>書名/連結</td> <td>網站名稱</td> <td>更新時間</td> <td> 操作 </td> 
                 </tr>
             </thead>
             <tbody>
@@ -28,6 +28,13 @@
                     <% end %>
                 </td>
                 <td><%= book.sitename %></td>
+                <td>
+                    <% if book.last_update != nil %>
+                        <%= book.last_update.in_time_zone('Taipei') %>
+                    <% else %>
+                        NIL
+                    <% end %>
+                </td>
                 <td>
                     <%= link_to '編輯', {:controller => 'books', :action => 'edit', :id => book}, 
                         class: "btn btn-info" %>
