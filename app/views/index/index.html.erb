@@ -1,7 +1,3 @@
-<body >
-
-<%= render "common/navbar" %>
-
 <div class="row">
     <div class="col-md-6 col-md-offset-3">
         <%= link_to '新增小說', {:controller => 'books', :action => 'new'}, 
@@ -39,15 +35,52 @@
                     <%= link_to '編輯', {:controller => 'books', :action => 'edit', :id => book}, 
                         class: "btn btn-info" %>
                     <%= link_to '刪除', {:controller => 'books', :action => 'destroy', :id => book},
-                        class: "btn btn-warning" %>
+                        class: "btn btn-warning btn-delete" %>
                 </td>
             </tr>
             <% end %>
             </tbody>
         </table>
+
+<div class="modal fade modal-dialog modal-sm" tabindex="-1" role="dialog" id="myModal" aria-labelledby="myModalLabel">
+<!--    <div class="modal-dialog modal-sm"> -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">警告</h4>
+            </div>
+            <div class="modal-body">
+            確認刪除？
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-warning" data-dismiss="modal" id="btn-check">確認</button>
+            </div>
+        </div>
+<!--    </div> -->
+</div>
+
     </div>
 </div>
 
-<%= render "common/footer" %>
+<script language="javascript">
 
-</body>
+window.onload = init;
+
+delete_url = "";
+
+function init(){
+    $(".btn-delete").click(function(){
+        delete_url = $(this).attr("href");
+        $('#myModal').modal();
+        return false;
+    });
+
+    $("#btn-check").click(function(){
+        $.post(delete_url, {}, function(res){
+            window.location.reload();
+        });
+    });
+}
+
+</script>
