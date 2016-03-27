@@ -5,9 +5,11 @@ class BooksController < ApplicationController
 
   def create
     @book = Book.new(book_params)
-    @book.save
-
-    redirect_to '/' 
+    if @book.save
+      redirect_to '/' 
+    else
+      render :action => :new
+    end
   end
 
   def edit
@@ -16,9 +18,11 @@ class BooksController < ApplicationController
 
   def update
     @book = Book.find(params[:id])
-    @book.update(book_params)
-
-    redirect_to '/'
+    if @book.update(book_params)
+      redirect_to '/'
+    else
+      render :action => :edit
+    end
   end
 
   def destroy
@@ -36,6 +40,15 @@ class BooksController < ApplicationController
 
     redirect_to @book.spoturl
   end 
+
+  def read
+    @book = Book.find(params[:id])
+    now = DateTime.current
+    @book.last_click = now
+    @book.save
+    
+    redirect_to '/'
+  end
 
   def scan_all
     @books = Book.select("*")
