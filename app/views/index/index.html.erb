@@ -4,7 +4,13 @@
             class: "btn btn-primary" %>
 
         <%= link_to '掃描更新', {:controller => 'books', :action => 'scan_all'}, 
-            class: "btn btn-default" %>
+            class: "btn btn-default btn-scan-all" %>
+        
+        <div class="progress" id="scan-bar">
+            <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
+                <span class="sr-only"><span>
+            </div>
+        </div>
         <table class="table">
             <thead>
                 <tr> 
@@ -28,7 +34,7 @@
                     <% if book.last_update != nil %>
                         <%= book.last_update.in_time_zone('Taipei') %>
                     <% else %>
-                        NIL
+                        還未掃過
                     <% end %>
                 </td>
                 <td>
@@ -72,6 +78,10 @@ window.onload = init;
 delete_url = "";
 
 function init(){
+    scan_bar = $("#scan-bar");
+    
+    scan_bar.hide();
+
     $(".btn-delete").click(function(){
         delete_url = $(this).attr("href");
         $('#myModal').modal();
@@ -83,6 +93,43 @@ function init(){
             window.location.reload();
         });
     });
+
+    $(".btn-scan-all").click(function(){
+        $.post($(this).attr("href"), {}, function(job_id){
+            $('.progress-bar').css('width', '0%').text('0%');
+            scan_bar.show();
+            var interval;
+            interval = setInterval(function(){
+                $.ajax({
+                url: '/progress-job/' + job_id,
+                success: function(job){
+                    var stage, progress;
+
+                    // If there are errors
+                    if (job.last_error != null) {
+                        $('.progress-bar').addClass('progress-bar-danger');
+                        scan_bar.hide();
+                        clearInterval(interval);
+                    }
+
+                    progress = job.progress_current / job.progress_max * 100;
+                    // In job stage
+                    if (progress.toString() !== 'NaN'){
+                        $('.progress-bar').css('width', progress + '%').text(progress + '%');
+                    }
+                },
+                error: function(){
+               // Job is no loger in database which means it finished successfuly
+                    $('.progress-bar').css('width', '100%').text('100%');
+                    scan_bar.hide();
+                    clearInterval(interval);
+                }
+                });
+            },1000);
+        });
+        return false;
+    });
+
 }
 
 </script>

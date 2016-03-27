@@ -45,3 +45,7 @@ end
 
 gem 'bootstrap-sass'
 gem 'bootstrap-modal-rails'
+
+gem 'delayed_job_active_record'
+gem 'progress_job'
+gem 'daemons'
