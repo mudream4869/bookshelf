@@ -7,8 +7,10 @@ class ScanAllBook < ProgressJob::Base
 
     now = DateTime.current
 
+    puts "Scanning at " + now.to_s
+
     @books.each do |book|
-      if book.last_scan == nil or book.last_scan + 1.hour < now
+      if book.last_scan == nil or book.last_scan + 1.second < now
         @tag = nil
         if book.sitename == "zizaidu"
           @tag = scan_url_zizaidu(book.spoturl)
@@ -33,9 +35,7 @@ class ScanAllBook < ProgressJob::Base
       update_progress
     end
 
-    redirect_to '/'
   end
-
 private
 
   def scan_url_zizaidu(url)

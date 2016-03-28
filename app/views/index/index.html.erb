@@ -6,7 +6,7 @@
         <%= link_to '掃描更新', {:controller => 'books', :action => 'scan_all'}, 
             class: "btn btn-default btn-scan-all" %>
         
-        <div class="progress" id="scan-bar">
+        <div class="progress" id="scan-bar" style="display:none;">
             <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
                 <span class="sr-only"><span>
             </div>
@@ -26,7 +26,7 @@
                     <% if book.last_update != nil and (
                             book.last_click == nil or 
                             book.last_click <= book.last_update) %>
-                        <span class="label label-success">New!</span>
+                        <span class="label label-success" id="newtag<%= book.id %>">New!</span>
                     <% end %>
                 </td>
                 <td><%= book.sitename %></td>
@@ -40,8 +40,18 @@
                 <td>
                     <%= link_to '編輯', {:controller => 'books', :action => 'edit', :id => book}, 
                         class: "btn btn-info" %>
-                    <%= link_to '已讀', {:controller => 'books', :action => 'read', :id => book},
-                        class: "btn btn-default" %>
+                    
+                    <% if book.last_update != nil and (
+                            book.last_click == nil or 
+                            book.last_click <= book.last_update) %>
+                     
+                        <%= link_to '已讀', {:controller => 'books', :action => 'read', :id => book},
+                            class: "btn btn-default btn-read", tag: "newtag" + book.id.to_s %>
+                    <% else %>
+                        
+                        <a href="#" class="btn btn-default" disabled>已讀</a>
+                    <% end %>
+
                     <%= link_to '刪除', {:controller => 'books', :action => 'destroy', :id => book},
                         class: "btn btn-warning btn-delete" %>
                 </td>
@@ -62,7 +72,9 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                <button type="button" class="btn btn-warning" data-dismiss="modal" id="btn-check">確認</button>
+                <button type="button" class="btn btn-warning" data-dismiss="modal" id="btn-check-delete">
+                    確認
+                </button>
             </div>
         </div>
 <!--    </div> -->
@@ -80,20 +92,23 @@ delete_url = "";
 function init(){
     scan_bar = $("#scan-bar");
     
-    scan_bar.hide();
-
     $(".btn-delete").click(function(){
         delete_url = $(this).attr("href");
         $('#myModal').modal();
         return false;
     });
 
-    $("#btn-check").click(function(){
+    $(".btn-read").click(function(){
+        $.post($(this).attr("href"), {}, function(res){});
+        $("#" + $(this).attr("tag")).hide();
+    });
+
+    $("#btn-check-delete").click(function(){
         $.post(delete_url, {}, function(res){
             window.location.reload();
         });
     });
-
+    
     $(".btn-scan-all").click(function(){
         $.post($(this).attr("href"), {}, function(job_id){
             $('.progress-bar').css('width', '0%').text('0%');
@@ -123,9 +138,10 @@ function init(){
                     $('.progress-bar').css('width', '100%').text('100%');
                     scan_bar.hide();
                     clearInterval(interval);
+                    window.location.reload();
                 }
                 });
-            },1000);
+            },100);
         });
         return false;
     });
