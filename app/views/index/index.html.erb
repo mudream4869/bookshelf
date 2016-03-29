@@ -14,7 +14,7 @@
         <table class="table">
             <thead>
                 <tr> 
-                    <td>書名/連結</td> <td>網站名稱</td> <td>更新時間</td> <td> 操作 </td> 
+                    <td>書名/連結</td> <td>標籤</td> <td>網站名稱</td> <td>更新時間</td> <td> 操作 </td> 
                 </tr>
             </thead>
             <tbody>
@@ -22,13 +22,14 @@
             <tr>
                 <td>
                     <%= link_to book.title, {:controller => 'books', :action => 'click', :id => book},
-                        :target => '_blank', class: "btn btn-link" %>
+                        :target => '_blank', class: "btn btn-link btn-read", tag: "newtag" + book.id.to_s %>
                     <% if book.last_update != nil and (
                             book.last_click == nil or 
                             book.last_click <= book.last_update) %>
                         <span class="label label-success" id="newtag<%= book.id %>">New!</span>
                     <% end %>
                 </td>
+                <td><%= book.tag %> </td>
                 <td><%= book.sitename %></td>
                 <td>
                     <% if book.last_update != nil %>

@@ -58,6 +58,6 @@ class BooksController < ApplicationController
   private
 
   def book_params
-    params.require(:book).permit(:title, :sitename, :spoturl)
+    params.require(:book).permit(:title, :sitename, :spoturl, :tag)
   end
 end
