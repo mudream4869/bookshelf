@@ -9,8 +9,8 @@
         <div class="btn-group" role="group" aria-label="...">
             <a href="/" class="btn btn-default">無分類</a>
             <% @tags.each do |tag| %>
-                <%= link_to tag, {:controller => 'index', :action => 'seive', :tag => tag},
-                class: "btn btn-info" %>
+                <%= link_to ('<span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span> ' + tag).html_safe, {:controller => 'index', :action => 'seive', :tag => tag},
+                class: "btn btn-info"%>
             <% end %>
         </div>
 
@@ -29,12 +29,14 @@
             <% @books.each do |book|  %>
             <tr>
                 <td>
-                    <%= link_to book.title, {:controller => 'books', :action => 'click', :id => book},
-                        :target => '_blank', class: "btn btn-link btn-read", tag: "newtag" + book.id.to_s %>
                     <% if book.last_update != nil and (
                             book.last_click == nil or 
                             book.last_click <= book.last_update) %>
+                        <%= link_to book.title, {:controller => 'books', :action => 'click', :id => book},
+                        :target => '_blank', class: "btn btn-link btn-read", tag: "newtag" + book.id.to_s %>
                         <span class="label label-success" id="newtag<%= book.id %>">New!</span>
+                    <% else %>
+                        <a href="<%=book.spoturl%>" target="_blank" class="btn btn-link"><%=book.title%></a>
                     <% end %>
                 </td>
                 <td><%= book.tag %> </td>
@@ -55,9 +57,9 @@
                             book.last_click <= book.last_update) %>
                      
                         <%= link_to '已讀', {:controller => 'books', :action => 'read', :id => book},
-                            class: "btn btn-default btn-read", tag: "newtag" + book.id.to_s %>
+                            class: "btn btn-default btn-read btn-read-newtag" + book.id.to_s, 
+                            tag: "newtag" + book.id.to_s %>
                     <% else %>
-                        
                         <a href="#" class="btn btn-default" disabled>已讀</a>
                     <% end %>
 
@@ -94,11 +96,9 @@
 
 <script language="javascript">
 
-window.onload = init;
-
 delete_url = "";
 
-function init(){
+init = function(){
     scan_bar = $("#scan-bar");
     
     $(".btn-delete").click(function(){
@@ -109,6 +109,7 @@ function init(){
 
     $(".btn-read").click(function(){
         $.post($(this).attr("href"), {}, function(res){});
+        $(".btn-read-" + $(this).attr("tag")).attr("disabled", true);
         $("#" + $(this).attr("tag")).hide();
     });
 
@@ -154,7 +155,9 @@ function init(){
         });
         return false;
     });
-
 }
+
+$(document).ready(init);
+$(document).on('page:load', init);
 
 </script>

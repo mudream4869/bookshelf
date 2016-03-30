@@ -55,7 +55,7 @@ class BooksController < ApplicationController
     render :text => @job.id.to_s
   end
 
-  private
+private
 
   def book_params
     params.require(:book).permit(:title, :sitename, :spoturl, :tag)

@@ -13,17 +13,22 @@
         :url => { :controller => 'books', :action => 'create'}, 
         :html => {:class => "form-horizontal"}
     } do |f|%>
+
     <div class="form-group">
-        <%= f.label :title, "書名", :class => "col-sm-2 control-label"%> 
-        <div class="col-sm-8">
-            <%= f.text_field :title, :class => "form-control"%>
+        <%= f.label :spoturl, "監測網址", :class => "col-sm-2 control-label" %>
+        <div class="col-sm-6">
+            <%= f.text_field :spoturl, :class => "form-control" %>
+        </div>
+
+        <div class="col-sm-2">
+            <a href="#" class="btn btn-primary" id="btn-detect">自動偵測</a>
         </div>
     </div>
 
     <div class="form-group">
-        <%= f.label :spoturl, "監測網址", :class => "col-sm-2 control-label" %>
+        <%= f.label :title, "書名", :class => "col-sm-2 control-label"%> 
         <div class="col-sm-8">
-            <%= f.text_field :spoturl, :class => "form-control" %>
+            <%= f.text_field :title, :class => "form-control"%>
         </div>
     </div>
 
@@ -52,3 +57,15 @@
     </div>
 
 </div>
+
+<script language="javascript">
+
+window.onload = init;
+
+function init(){
+    $("#btn-detect").click(function(){
+        
+    });
+}
+
+</script>
