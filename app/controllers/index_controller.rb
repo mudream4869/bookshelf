@@ -9,4 +9,12 @@ class IndexController < ApplicationController
     @tags = Book.where("tag != ''").uniq.pluck(:tag)
     render "index"
   end
+
+  def seivenew
+    @books = Book.where.not(:last_update => nil)
+    @books = @books.where("last_click  !=  NULL OR last_click <= last_update")
+    @books = @books.order("last_update DESC")
+    @tags = Book.where("tag != ''").uniq.pluck(:tag)
+    render "index"
+  end
 end

@@ -14,6 +14,10 @@
             <% end %>
         </div>
 
+        <%= link_to "New" , {:controller => 'index', :action => 'seivenew'},
+            class: "btn btn-success"%>
+    
+
         <div class="progress" id="scan-bar" style="display:none;">
             <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
                 <span class="sr-only"><span>
@@ -22,21 +26,28 @@
         <table class="table">
             <thead>
                 <tr> 
-                    <td>書名/連結</td> <td>標籤</td> <td>網站名稱</td> <td>更新時間</td> <td> 操作 </td> 
+                    <td>書名(共計
+                    <%= @books.length %>
+                    本書)/連結</td> <td>標籤</td> <td>網站名稱</td> <td>更新時間</td> <td> 操作 </td> 
                 </tr>
             </thead>
             <tbody>
             <% @books.each do |book|  %>
             <tr>
                 <td>
+                    <% if book.title.length > 12 %>
+                        <% booktitle = book.title.slice(0, 12) + "..." %>
+                    <% else %>
+                        <% booktitle = book.title %>
+                    <% end %>
                     <% if book.last_update != nil and (
                             book.last_click == nil or 
                             book.last_click <= book.last_update) %>
-                        <%= link_to book.title, {:controller => 'books', :action => 'click', :id => book},
-                        :target => '_blank', class: "btn btn-link btn-read", tag: "newtag" + book.id.to_s %>
+                        <%= link_to booktitle, {:controller => 'books', :action => 'click', :id => book},
+                        :target => '_blank', class: "btn btn-link btn-read-link", tag: "newtag" + book.id.to_s %>
                         <span class="label label-success" id="newtag<%= book.id %>">New!</span>
                     <% else %>
-                        <a href="<%=book.spoturl%>" target="_blank" class="btn btn-link"><%=book.title%></a>
+                        <a href="<%=book.spoturl%>" target="_blank" class="btn btn-link"><%=booktitle%></a>
                     <% end %>
                 </td>
                 <td><%= book.tag %> </td>
@@ -57,7 +68,7 @@
                             book.last_click <= book.last_update) %>
                      
                         <%= link_to '已讀', {:controller => 'books', :action => 'read', :id => book},
-                            class: "btn btn-default btn-read btn-read-newtag" + book.id.to_s, 
+                            class: "btn btn-default btn-read-btn btn-read-newtag" + book.id.to_s, 
                             tag: "newtag" + book.id.to_s %>
                     <% else %>
                         <a href="#" class="btn btn-default" disabled>已讀</a>
@@ -107,7 +118,13 @@ init = function(){
         return false;
     });
 
-    $(".btn-read").click(function(){
+    $(".btn-read-link").click(function(){
+        $.post($(this).attr("href"), {}, function(res){});
+        $(".btn-read-" + $(this).attr("tag")).attr("disabled", true);
+        $("#" + $(this).attr("tag")).hide();
+    });
+
+    $(".btn-read-btn").click(function(){
         $.post($(this).attr("href"), {}, function(res){});
         $(".btn-read-" + $(this).attr("tag")).attr("disabled", true);
         $("#" + $(this).attr("tag")).hide();
