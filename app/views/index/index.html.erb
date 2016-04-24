@@ -1,20 +1,28 @@
 <div class="row">
-    <div class="col-md-8 col-md-offset-2">
+    <div class="col-md-2 col-md-offset-1">
+
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="btn-group" role="group" aria-label="...">
+                    <a href="/" class="btn btn-default">無分類</a>
+                    <%= link_to "New" , {:controller => 'index', :action => 'seivenew'},
+                        class: "btn btn-success"%>
+                    <% @tags.each do |tag| %>
+                        <%= link_to ('<span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span> ' + tag).html_safe, {:controller => 'index', :action => 'seive', :tag => tag},
+                        class: "btn btn-info"%>
+                    <% end %>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="col-md-7">
         <%= link_to '新增小說', {:controller => 'books', :action => 'new'}, 
             class: "btn btn-primary" %>
 
         <%= link_to '掃描更新', {:controller => 'books', :action => 'scan_all'}, 
             class: "btn btn-default btn-scan-all" %>
-        
-        <div class="btn-group" role="group" aria-label="...">
-            <a href="/" class="btn btn-default">無分類</a>
-            <%= link_to "New" , {:controller => 'index', :action => 'seivenew'},
-                class: "btn btn-success"%>
-            <% @tags.each do |tag| %>
-                <%= link_to ('<span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span> ' + tag).html_safe, {:controller => 'index', :action => 'seive', :tag => tag},
-                class: "btn btn-info"%>
-            <% end %>
-        </div>
 
    
 
