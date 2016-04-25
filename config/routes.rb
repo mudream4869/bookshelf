@@ -3,14 +3,6 @@ Rails.application.routes.draw do
 
   match ':controller(/:action(/:id(.:format)))', :via => :all
 
-  get 'spotservers/' => 'spotservers#index'
-  get 'listio/' => 'listio#index'
-  get 'listio/output/' => 'listio#output'
-  get 'listio/input/' => 'listio#input'
-    
-  post 'listio/outputtxt/' => 'listio#outputtxt'
-
-
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

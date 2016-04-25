@@ -11,6 +11,28 @@ class ListioController < ApplicationController
     @books = Book.order("last_update DESC")       
   end
 
+  def inputjson
+    require 'base64'
+    file = params[:file_content]
+    file_content = file[(file.index("base64,") + 7)..-1]
+
+    @jsonfile = Base64.decode64(file_content)
+    
+    puts @jsonfile
+    
+    @jsonarray = JSON.parse(@jsonfile)
+
+    puts @jsonarray
+
+    @jsonarray.each do |book|
+      puts book
+      @book = Book.new(book)
+      @book.save
+    end
+
+    render :text => "S"
+  end
+
   def outputtxt
     require 'json'
     @id_list = JSON.parse(params[:id_list])
@@ -36,7 +58,7 @@ class ListioController < ApplicationController
       @retlist.append({:title => book.title, :spoturl => book.spoturl, :sitename => book.sitename})
     end
 
-    render :text => @retlist
+    render :text => @retlist.to_json
   end
 
 end
