@@ -1,3 +1,14 @@
+# 完成功能
+
+* 自動掃描
+* 匯入匯出
+
+# Run up
+
+```bash
+$ bin/delayed_job run
+$ bin/rails s
+```
 # README
 
 This README would normally document whatever steps are necessary to get the
@@ -23,9 +34,3 @@ Things you may want to cover:
 
 * ...
 
-# Run up
-
-```bash
-$ bin/delayed_job run
-$ bin/rails s
-```
