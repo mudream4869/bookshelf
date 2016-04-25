@@ -24,8 +24,6 @@
         <%= link_to '掃描更新', {:controller => 'books', :action => 'scan_all'}, 
             class: "btn btn-default btn-scan-all" %>
 
-   
-
         <div class="progress" id="scan-bar" style="display:none;">
             <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
                 <span class="sr-only"><span>
@@ -34,17 +32,16 @@
         <table class="table">
             <thead>
                 <tr> 
-                    <td>書名(共計
-                    <%= @books.length %>
-                    本書)/連結</td> <td>標籤</td> <td>網站名稱</td> <td>更新時間</td> <td> 操作 </td> 
+                    <td>書名(共計 <%= @books.length %> 本書)/連結</td>
+                    <td>標籤</td> <td>網站名稱</td> <td>更新時間</td> <td> 操作 </td> 
                 </tr>
             </thead>
             <tbody>
             <% @books.each do |book|  %>
             <tr>
                 <td>
-                    <% if book.title.length > 12 %>
-                        <% booktitle = book.title.slice(0, 12) + "..." %>
+                    <% if book.title.length > 8 %>
+                        <% booktitle = book.title.slice(0, 8) + "..." %>
                     <% else %>
                         <% booktitle = book.title %>
                     <% end %>
