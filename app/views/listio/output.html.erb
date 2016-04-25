@@ -10,10 +10,24 @@
     <div class="col-md-7">
         <a href="#" class="btn btn-primary btn-output-txt">匯出成純文字發佈格式</a>
         <a href="#" class="btn btn-primary btn-output-json">匯出JSON格式</a>
+
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="btn-group" role="group" aria-label="...">
+                    <a href="/listio/output" class="btn btn-default">無分類</a>
+                    <% @tags.each do |tag| %>
+                        <%= link_to ('<span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span> ' + tag).html_safe, {:controller => 'listio', :action => 'output', :tag => tag},
+                        class: "btn btn-info"%>
+                    <% end %>
+                </div>
+            </div>
+        </div>
+
         <table class="table">
             <thead>
                 <tr> 
-                    <td> 選擇 </td> <td>書名</td> <td>標籤</td> <td>網站名稱</td>
+                    <td> <input type="checkbox" id="checkall"> 選擇 </td>
+                    <td>書名</td> <td>標籤</td> <td>網站名稱</td>
                 </tr>
             </thead>
             <tbody>
@@ -89,6 +103,10 @@ init = function(){
             $("textarea#outputres").val(res);
             $('#myModal').modal();
         });
+    });
+
+    $("#checkall").click(function(){
+        $("input:checkbox").prop('checked', this.checked);
     });
 
 }

@@ -9,6 +9,10 @@ class ListioController < ApplicationController
 
   def output
     @books = Book.order("last_update DESC")       
+    if params[:tag]
+      @books = Book.where(:tag => params[:tag])
+    end
+    @tags = Book.where("tag != ''").uniq.pluck(:tag)
   end
 
   def inputjson
