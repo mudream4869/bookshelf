@@ -1,7 +1,6 @@
 class ListioController < ApplicationController
   def index  
-    @books = Book.order("last_update DESC")       
-    render :action => :output
+    redirect_to "/listio/output/"
   end
 
   def input
@@ -25,4 +24,19 @@ class ListioController < ApplicationController
 
     render :text => @rettxt
   end
+
+  def outputjson
+    require 'json'
+    @id_list = JSON.parse(params[:id_list])
+    @books = Book.where(:id => @id_list) 
+    
+    @retlist = []
+    
+    @books.each do |book|
+      @retlist.append({:title => book.title, :spoturl => book.spoturl, :sitename => book.sitename})
+    end
+
+    render :text => @retlist
+  end
+
 end
