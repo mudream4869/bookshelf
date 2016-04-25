@@ -7,8 +7,26 @@
                     <a href="/" class="btn btn-default">無分類</a>
                     <%= link_to "New" , {:controller => 'index', :action => 'seivenew'},
                         class: "btn btn-success"%>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="btn-group" role="group" aria-label="...">
                     <% @tags.each do |tag| %>
-                        <%= link_to ('<span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span> ' + tag).html_safe, {:controller => 'index', :action => 'seive', :tag => tag},
+                        <%= link_to ('<span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span> ' + tag).html_safe, {:controller => 'index', :action => 'seivetag', :tag => tag},
+                        class: "btn btn-info"%>
+                    <% end %>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="btn-group" role="group" aria-label="...">
+                    <% @sitenames.each do |sitename| %>
+                        <%= link_to ('<span class="glyphicon glyphicon-cloud" aria-hidden="true"></span> ' + sitename).html_safe, {:controller => 'index', :action => 'seivesitename', :sitename => sitename},
                         class: "btn btn-info"%>
                     <% end %>
                 </div>
