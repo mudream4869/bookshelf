@@ -1,0 +1,82 @@
+<div class="row">
+    <div class="col-md-2 col-md-offset-1">
+        <ul class="nav nav-pills nav-stacked">
+            <li role="presentation" class="active"><a href="#">匯出</a></li>
+            <li role="presentation"><a href="/listio/input">匯入</a></li>
+        </ul>
+    </div>
+
+
+    <div class="col-md-7">
+        <a href="#" class="btn btn-primary btn-output-txt">匯出成純文字發佈格式</a>
+        <table class="table">
+            <thead>
+                <tr> 
+                    <td> 選擇 </td> <td>書名</td> <td>標籤</td> <td>網站名稱</td>
+                </tr>
+            </thead>
+            <tbody>
+            <% @books.each do |book|  %>
+            <tr>
+                <td>
+                    <input type="checkbox" id="check_<%=book.id.to_s%>" tag="<%=book.id.to_s%>">
+                </td>
+                <td>
+                    <% if book.title.length > 20 %>
+                        <% booktitle = book.title.slice(0, 20) + "..." %>
+                    <% else %>
+                        <% booktitle = book.title %>
+                    <% end %>
+                    <%= booktitle %>
+                </td>
+                <td><%= book.tag %> </td>
+                <td><%= book.sitename %></td>
+            </tr>
+            <% end %>
+            </tbody>
+        </table>
+
+<div class="modal fade modal-dialog modal-sm" tabindex="-1" role="dialog" id="myModal" aria-labelledby="myModalLabel">
+<!--    <div class="modal-dialog modal-sm"> -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">輸出結果</h4>
+            </div>
+            <div class="modal-body">
+                <textarea class="form-control" id="outputres" rows="10" readonly>
+                </textarea>
+            </div>
+        </div>
+<!--    </div> -->
+</div>
+
+ 
+
+
+    </div>
+</div>
+
+<script language="javascript">
+
+init = function(){
+    $("a.btn-output-txt").click(function(){
+        id_list = [];
+        checkboxes = $("input");
+        for(i = 0; i < checkboxes.length;i++)
+            if(checkboxes[i].checked)
+                id_list.push($(checkboxes[i]).attr("tag"));
+
+        $.post("/listio/outputtxt", { 
+            id_list : JSON.stringify(id_list)
+        }, function(res){
+            $("textarea#outputres").val(res);
+            $('#myModal').modal();
+        });
+    });
+}
+
+$(document).ready(init);
+$(document).on('page:load', init);
+
+</script>
