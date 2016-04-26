@@ -46,8 +46,6 @@ class BooksController < ApplicationController
     now = DateTime.current
     @book.last_click = now
     @book.save
-    
-    redirect_to '/'
   end
 
   def scan_all

@@ -4,7 +4,7 @@
         <div class="panel panel-default">
             <div class="panel-body">
                 <div class="btn-group" role="group" aria-label="...">
-                    <a href="/" class="btn btn-default">無分類</a>
+                    <a href="/" class="btn btn-default">所有</a>
                     <%= link_to "New" , {:controller => 'index', :action => 'seivenew'},
                         class: "btn btn-success"%>
                 </div>
@@ -12,10 +12,16 @@
         </div>
 
         <div class="panel panel-default">
+            <div class="panel-heading">
+                按照標籤分類
+            </div>
             <div class="panel-body">
+
                 <div class="btn-group" role="group" aria-label="...">
+                    <%= link_to ('<span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span> 空白').html_safe, {:controller => 'index', :action => 'index', :tag => ''},
+                        class: "btn btn-info"%>
                     <% @tags.each do |tag| %>
-                        <%= link_to ('<span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span> ' + tag).html_safe, {:controller => 'index', :action => 'seivetag', :tag => tag},
+                        <%= link_to ('<span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span> ' + tag).html_safe, {:controller => 'index', :action => 'index', :tag => tag},
                         class: "btn btn-info"%>
                     <% end %>
                 </div>
@@ -23,16 +29,30 @@
         </div>
 
         <div class="panel panel-default">
+            <div class="panel-heading">
+                按照網站名稱分類
+            </div>
             <div class="panel-body">
                 <div class="btn-group" role="group" aria-label="...">
                     <% @sitenames.each do |sitename| %>
-                        <%= link_to ('<span class="glyphicon glyphicon-cloud" aria-hidden="true"></span> ' + sitename).html_safe, {:controller => 'index', :action => 'seivesitename', :sitename => sitename},
+                        <%= link_to ('<span class="glyphicon glyphicon-cloud" aria-hidden="true"></span> ' + sitename).html_safe, {:controller => 'index', :action => 'index', :sitename => sitename},
                         class: "btn btn-info"%>
                     <% end %>
                 </div>
             </div>
         </div>
 
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                按照標題搜尋
+            </div>
+            <div class="panel-body">
+                <%= form_tag("/", :method => "get", id: "search-form") do %>
+                    <%= text_field_tag :search, params[:search], class: "form-control" %>
+                    <%= submit_tag "搜尋", class: "btn btn-primary form-control" %>
+                <% end %>
+            </div>
+        </div>
     </div>
 
     <div class="col-md-7">
@@ -151,6 +171,7 @@ init = function(){
         $.post($(this).attr("href"), {}, function(res){});
         $(".btn-read-" + $(this).attr("tag")).attr("disabled", true);
         $("#" + $(this).attr("tag")).hide();
+        return false;
     });
 
     $("#btn-check-delete").click(function(){
