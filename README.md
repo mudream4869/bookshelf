@@ -1,9 +1,20 @@
 # 完成功能
 
-* 自動掃描
-* 匯入匯出
+* 自動掃描 : 完成網站有
+    
+    - 起點
+    - hbooker
 
-# Run up
+* 匯入匯出
+    
+    - 匯入：json型
+    - 匯出：txt型、json型
+
+# 畫面
+
+![](index.png)
+
+# 啟動
 
 ```bash
 $ bin/delayed_job run
