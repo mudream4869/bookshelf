@@ -10,7 +10,11 @@ class ScanAllBook < ProgressJob::Base
     puts "Scanning at " + now.to_s
 
     @books.each do |book|
-      if book.last_scan == nil or book.last_scan + 2.hour < now or book.sitename == "sfacg"
+      time_gap = 3.hour
+      if book.last_update != nil and book.last_update + 2.week < now
+        time_gap = 1.day
+      end
+      if book.last_scan == nil or book.last_scan + time_gap < now
         @tag = nil
         if book.sitename == "zizaidu"
           @tag = scan_url_zizaidu(book.spoturl)
