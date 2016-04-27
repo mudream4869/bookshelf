@@ -1,6 +1,7 @@
 class BooksController < ApplicationController
   def new
     @book = Book.new
+    @tags = Book.where("tag != ''").uniq.pluck(:tag)
   end
 
   def create
@@ -14,6 +15,7 @@ class BooksController < ApplicationController
 
   def edit
     @book = Book.find(params[:id])
+    @tags = Book.where("tag != ''").uniq.pluck(:tag)
   end
 
   def update

@@ -42,7 +42,12 @@
     <div class="form-group">
         <%= f.label :tag, "標籤", :class => "col-sm-2 control-label" %>
         <div class="col-sm-8">
-            <%= f.text_field :tag, :class => "form-control" %>
+            <%= f.text_field :tag, :class => "form-control labelclass" %>
+            <div class="btn-group" role="group" aria-label="...">
+                <% @tags.each do |tag| %>
+                    <a href="#" onclick="$('.labelclass').val('<%=tag%>')" class="btn btn-info"><%=tag%></a>
+                <% end %>
+            </div>
         </div>
     </div>
 
