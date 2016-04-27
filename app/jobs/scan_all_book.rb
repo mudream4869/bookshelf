@@ -14,7 +14,7 @@ class ScanAllBook < ProgressJob::Base
       if book.last_update != nil and book.last_update + 2.week < now
         time_gap = 1.day
       end
-      if book.last_scan == nil or book.last_scan + time_gap < now
+      if (book.last_update == nil or book.last_update + 8.hour < now) and (book.last_scan == nil or book.last_scan + time_gap < now)
         @tag = nil
         if book.sitename == "zizaidu"
           @tag = scan_url_zizaidu(book.spoturl)

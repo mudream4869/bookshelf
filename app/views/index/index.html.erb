@@ -5,7 +5,7 @@
             <div class="panel-body">
                 <div class="btn-group" role="group" aria-label="...">
                     <a href="/" class="btn btn-default">所有</a>
-                    <%= link_to "New" , {:controller => 'index', :action => 'seivenew'},
+                    <%= link_to "New" , {:controller => 'index', :action => 'index', :new => '1'},
                         class: "btn btn-success"%>
                 </div>
             </div>
@@ -58,15 +58,20 @@
     <div class="col-md-7">
         <%= link_to '新增小說', {:controller => 'books', :action => 'new'}, 
             class: "btn btn-primary" %>
+        
+        <% if @jobs.length == 0%>
+            <%= link_to '掃描更新', {:controller => 'books', :action => 'scan_all'}, 
+                class: "btn btn-default btn-scan-all" %>
+        <% end %>
 
-        <%= link_to '掃描更新', {:controller => 'books', :action => 'scan_all'}, 
-            class: "btn btn-default btn-scan-all" %>
-
-        <div class="progress" id="scan-bar" style="display:none;">
-            <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
-                <span class="sr-only"><span>
+        <div id="scan-bar" style="<% if @jobs.length == 0 %>display:none;<% end %>">
+            <div class="progress">
+                <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
+                    <span class="sr-only"><span>
+                </div>
             </div>
         </div>
+
         <table class="table">
             <thead>
                 <tr> 
@@ -153,8 +158,8 @@
 delete_url = "";
 
 init = function(){
-    scan_bar = $("#scan-bar");
     
+    scan_bar = $("#scan-bar");
     $(".btn-delete").click(function(){
         delete_url = $(this).attr("href");
         $('#myModal').modal();
@@ -181,41 +186,50 @@ init = function(){
     });
     
     $(".btn-scan-all").click(function(){
-        $.post($(this).attr("href"), {}, function(job_id){
-            $('.progress-bar').css('width', '0%').text('0%');
-            scan_bar.show();
-            var interval;
-            interval = setInterval(function(){
-                $.ajax({
-                url: '/progress-job/' + job_id,
-                success: function(job){
-                    var stage, progress;
-
-                    // If there are errors
-                    if (job.last_error != null) {
-                        $('.progress-bar').addClass('progress-bar-danger');
-                        scan_bar.hide();
-                        clearInterval(interval);
-                    }
-
-                    progress = job.progress_current / job.progress_max * 100;
-                    // In job stage
-                    if (progress.toString() !== 'NaN'){
-                        $('.progress-bar').css('width', progress + '%').text(progress + '%');
-                    }
-                },
-                error: function(){
-               // Job is no loger in database which means it finished successfuly
-                    $('.progress-bar').css('width', '100%').text('100%');
-                    scan_bar.hide();
-                    clearInterval(interval);
-                    window.location.reload();
-                }
-                });
-            },100);
-        });
+        $.post($(this).attr("href"), {}, show_job);
         return false;
-    });
+     });
+
+<% if @jobs.length >= 1 %>
+    num = <%= @lastjob.id.to_s%>
+    show_job(num.toString());
+<% end %>
+
+}
+
+function show_job(job_id){
+    scan_bar = $("#scan-bar");
+    $('.progress-bar').css('width', '0%').text('0%');
+    scan_bar.show();
+    var interval;
+    interval = setInterval(function(){
+        $.ajax({
+        url: '/progress-job/' + job_id,
+        success: function(job){
+            var stage, progress;
+
+            // If there are errors
+            if (job.last_error != null) {
+                $('.progress-bar').addClass('progress-bar-danger');
+                scan_bar.hide();
+                clearInterval(interval);
+            }
+
+            progress = job.progress_current / job.progress_max * 100;
+            // In job stage
+            if (progress.toString() !== 'NaN'){
+                $('.progress-bar').css('width', progress + '%').text(progress + '%');
+            }
+        },
+        error: function(){
+       // Job is no loger in database which means it finished successfuly
+            $('.progress-bar').css('width', '100%').text('100%');
+            scan_bar.hide();
+            clearInterval(interval);
+            window.location.reload();
+        }
+        });
+    },100);
 }
 
 $(document).ready(init);
