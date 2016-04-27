@@ -14,7 +14,8 @@ class ScanAllBook < ProgressJob::Base
       if book.last_update != nil and book.last_update + 2.week < now
         time_gap = 1.day
       end
-      if (book.last_update == nil or book.last_update + 8.hour < now) and (book.last_scan == nil or book.last_scan + time_gap < now)
+      if (book.last_update == nil or book.last_update + 8.hour < now) and 
+         (book.last_scan == nil or book.last_scan + time_gap < now)
         @tag = nil
         if book.sitename == "zizaidu"
           @tag = scan_url_zizaidu(book.spoturl)
@@ -24,6 +25,12 @@ class ScanAllBook < ProgressJob::Base
           @tag = scan_url_sfacg(book.spoturl)
         elsif book.sitename == "qidian"
           @tag = scan_url_qidian(book.spoturl)
+        elsif book.sitename == "chuangshi"
+          @tag = scan_url_chuangshi(book.spoturl)
+        elsif book.sitename == "baidu"
+          @tag = scan_url_baidu(book.spoturl)
+        elsif book.sitename == "8kana"
+          @tag = scan_url_8kana(book.spoturl)
         end
 
         if @tag != nil
@@ -70,6 +77,32 @@ private
     ret = doc.css('li').to_s
     return ret
   end
+
+  def scan_url_chuangshi(url)
+    require 'open-uri'
+    require 'nokogiri'
+    doc = Nokogiri::HTML(open(url))
+    ret = doc.css('div.chaptername').to_s
+    return ret
+  end
+
+  def scan_url_baidu(url)
+    require 'open-uri'
+    require 'nokogiri'
+    doc = Nokogiri::HTML(open(url + "?see_lz=1"))
+    ret = doc.css('li.l_reply_num').to_s
+    return ret
+  end
+
+  def scan_url_8kana(url)
+    require 'open-uri'
+    require 'nokogiri'
+    doc = Nokogiri::HTML(open(url))
+    ret = doc.css('a.chapter_con_a').to_s
+    return ret
+  end
+
+
 
 
 end
