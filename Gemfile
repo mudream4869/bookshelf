@@ -49,3 +49,5 @@ gem 'bootstrap-modal-rails'
 gem 'delayed_job_active_record'
 gem 'progress_job'
 gem 'daemons'
+
+gem 'ropencc'

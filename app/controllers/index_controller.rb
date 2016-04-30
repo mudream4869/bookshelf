@@ -17,7 +17,10 @@ class IndexController < ApplicationController
     end
 
     if params[:search]
-      @books = @books.where("title LIKE ?", "%#{params[:search]}%")
+      t_str = params[:search]
+      s_str = Ropencc.conv('t2s.json', t_str)
+      @books = @books.where("title LIKE ? OR title LIKE ?", 
+                            "%#{t_str}%", "%#{s_str}%")
     end
 
     @tags = Book.where("tag != ''").uniq.pluck(:tag)
